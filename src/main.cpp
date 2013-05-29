@@ -85,6 +85,6 @@ void prim_edges()
   printf("MST edges result:\n");
   for(int i = 0 ; i < (int)mst.edges.size() ; i++)
   {
-    printf("%d %d %d\n", mst.edges[i].v1, mst.edges[i].v2, mst.edges[i].weight);
+    printf("%d %d %d\n", mst.edges[i].v1+1, mst.edges[i].v2+1, mst.edges[i].weight);
   }
 }
