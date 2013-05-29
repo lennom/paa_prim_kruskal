@@ -4,51 +4,66 @@
 #include <vector>
 #include <iostream>
 
+class Edge
+{
+public:
+  Edge(int vi, int vf, int w) 
+    : v1(vi), v2(vf), weight(w)
+  {}
+
+  int v1;
+  int v2;
+  int weight;
+};
+
+struct Edge_compare  
+{  
+  bool operator()(const Edge& l, const Edge& r)  
+  {  
+    return l.weight > r.weight;  
+  }  
+}; 
+
+
 class MST  
 {
 public:
   MST(bool _directed = false) : directed(_directed)
   {
     V = 0;
-    E = 0;
   }
 
   MST(int nNodes, bool _directed = false) : directed(_directed)
   {
     V = nNodes;
-    for(int i = 0 ; i < nNodes; i++)
-    {
-      edges.push_back(std::vector<int>(0));
-    }
   }
 
   ~MST() {}
 
-  void add_edge(int v1, int v2)
+  void add_edge(int v1, int v2, int w = 1)
   {
     if(v1 > V || v2 > V)
     {
-      std::cout << "Não foi possível adicionar a aresta, vértices não indexado" << std::endl;
+      std::cout << "error on vertex index." << std::endl;
       return;
     }
 
     //adiciona apenas (v1,v2) 
     if(directed)
     {
-      edges[v1].push_back(v2);
+      edges.push_back(Edge(v1,v2,w));
     }
     //grafo não direcionado (v1,v2) = (v2,v1)
     else
     {
-      edges[v1].push_back(v2);
-      edges[v2].push_back(v1);
+      edges.push_back(Edge(v1,v2,w));
+      edges.push_back(Edge(v2,v1,w));
     }
   }
 
   bool directed;
-  unsigned int V;
-  unsigned int E;
-  std::vector<std::vector<int>> edges;
+  int V;
+  std::vector<Edge> edges;
 };
 
 #endif

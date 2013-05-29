@@ -9,11 +9,11 @@
 
   . heapsort                           [done]
   . counting sort                      [done]
-  . union by rank                      [working]
-  . paht compression                   [working]
+  . union by rank                      [----]
+  . paht compression                   [----]
   . fila de prioridades                [done]
-  . fila de prioridades com change-key [working]
-  . kruskal                            [working]
+  . fila de prioridades com change-key [----]
+  . kruskal                            [----]
   . prim                               [working]
 
   Input:
@@ -54,14 +54,25 @@ int main()
   int n;
   std::cin >> n;
   int v1,v2,risco;
-  for(int i = 0 ; i < n ; i++)
+  Graph g(n);
+  while(std::cin >> v1 >> v2 >> risco)
   {
-    std::cin >> v1 >> v2 >> risco;
+    g.add_edge(v1-1,v2-1,risco);
   }
 
-  Graph g(n);
-
-  priority_queue_example();
+  std::vector<int> cost;
+  MST mst(n);
+  prim(g,cost,mst);
   
+  /*for(int i = 0 ; i < (int)cost.size(); i++)
+  {
+    std::cout << i+1 << ": " << cost[i] << std::endl;
+  }*/
+
+  printf("MST edges result:\n");
+  for(int i = 0 ; i < (int)mst.edges.size() ; i++)
+  {
+    printf("%d %d %d\n", mst.edges[i].v1, mst.edges[i].v2, mst.edges[i].weight);
+  }
   return 0;
 }

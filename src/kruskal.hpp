@@ -23,6 +23,21 @@ void kruskal(Graph G, MST &mst)
       Union(find_set(u), find_set(v));
     }
   }*/
+  
+  /*
+  Kruskal(G, c) {
+Sort edges weights so that c1 c2 ... cm.
+T 
+foreach (u V) make a set containing singleton u
+for i = 1 to m
+(u,v) = ei
+if (u and v are in different sets) {
+T T {ei}
+merge the sets containing u and v
+}
+return T
+}
+  */
 }
 
 #endif

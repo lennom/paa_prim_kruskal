@@ -20,10 +20,11 @@ public:
     for(int i = 0 ; i < nNodes; i++)
     {
       edges.push_back(std::vector<int>(0));
+      weights.push_back(std::vector<int>(0));
     }
   }
 
-  void add_edge(int v1, int v2)
+  void add_edge(int v1, int v2, int w = 1)
   {
     if(v1 > V || v2 > V)
     {
@@ -35,20 +36,24 @@ public:
     if(directed)
     {
       edges[v1].push_back(v2);
+      weights[v1].push_back(w);
     }
     //grafo não direcionado (v1,v2) = (v2,v1)
     else
     {
       edges[v1].push_back(v2);
+      weights[v1].push_back(w);
       edges[v2].push_back(v1);
+      weights[v2].push_back(w);
     }
   }
   
   bool directed;
-  unsigned int V;
-  unsigned int E;
+  int V;
+  int E;
   //std::vector<int> edges[n_nodes];
   std::vector<std::vector<int>> edges;
+  std::vector<std::vector<int>> weights;
 };
 
 
