@@ -1,4 +1,4 @@
-/*
+﻿/*
   - Leonardo Benevides
   - Leonardo Quatrin Campagnolo
 
@@ -25,8 +25,43 @@
   [aresta n  , vértice 1] [aresta n  , vértice 2] [risco aresta n  ]
 
   Relatório
-  . Decisões de implementação que foram importantes no desenvolvimento do trabalho;
-  . O ambiente computacional utilizado;
-  . Resultados dos experimentos (tabelas/risco total das árvores);
-  . Uma discussão comparando os resultados obtidos pelos diferentes algoritmos implementados e confrontando os resultados encontrados com aqueles previstos pela teoria.
+  . Decisões de implementação que foram importantes no desenvolvimento do trabalho;
+  . O ambiente computacional utilizado;
+  . Resultados dos experimentos (tabelas/risco total das árvores);
+  . Uma discussão comparando os resultados obtidos pelos diferentes algoritmos implementados e confrontando os resultados encontrados com aqueles previstos pela teoria.
 */
+
+#include "counting_sort.hpp"
+#include "heapsort.hpp"
+#include "priority_queue.hpp"
+
+#include "graph.hpp"
+#include "mst.hpp"
+
+#include "kruskal.hpp"
+#include "prim.hpp"
+
+#include "union_by_rank.hpp"
+#include "path_compression.hpp"
+
+#include <iostream>
+#include <queue>
+
+#include <stdio.h>
+ 
+int main()
+{
+  int n;
+  std::cin >> n;
+  int v1,v2,risco;
+  for(int i = 0 ; i < n ; i++)
+  {
+    std::cin >> v1 >> v2 >> risco;
+  }
+
+  Graph g(n);
+
+  priority_queue_example();
+  
+  return 0;
+}
