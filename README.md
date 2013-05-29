@@ -22,7 +22,7 @@
   ...
   [aresta n-1, vértice 1] [aresta n-1, vértice 2] [risco aresta n-1]
   [aresta n  , vértice 1] [aresta n  , vértice 2] [risco aresta n  ]
-
+  
   Relatório
   - Decisões de implementação que foram importantes no desenvolvimento do trabalho;
   - O ambiente computacional utilizado;
