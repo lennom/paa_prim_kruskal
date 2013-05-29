@@ -14,7 +14,7 @@
   . fila de prioridades                [done]
   . fila de prioridades com change-key [----]
   . kruskal                            [----]
-  . prim                               [working]
+  . prim                               [done]
 
   Input:
   [número de vértices]
@@ -49,7 +49,21 @@
 
 #include <stdio.h>
  
+void prim_edges();
+
 int main()
+{
+  //kruskal_hs_ubr();
+  //kruskal_hs_pc();
+  //kruskal_cs_ubr();
+  //kruskal_cs_pc();
+  prim_edges();
+  //prim_vertex();
+
+  return 0;
+}
+
+void prim_edges()
 {
   int n;
   std::cin >> n;
@@ -59,7 +73,6 @@ int main()
   {
     g.add_edge(v1-1,v2-1,risco);
   }
-
   std::vector<int> cost;
   MST mst(n);
   prim(g,cost,mst);
@@ -74,5 +87,4 @@ int main()
   {
     printf("%d %d %d\n", mst.edges[i].v1, mst.edges[i].v2, mst.edges[i].weight);
   }
-  return 0;
 }
