@@ -23,12 +23,9 @@
 #include "graph.hpp"
 #include "mst.hpp"
 #include "heapsort.hpp"
-#include "union_by_rank.hpp"
-#include "path_compression.hpp"
+#include "tree_node.hpp"
 
-//n -> número de nodos
-//m -> número de arestas
-void kruskal_hs_ubr(Graph G, MST &T)
+void kruskal_hs(Graph G, MST &T)
 {
   std::vector<Edge> edges;
   for(int i = 0 ; i < G.V ; i++)
@@ -41,58 +38,28 @@ void kruskal_hs_ubr(Graph G, MST &T)
   //tem que trocar a função de compare (pesquisar como)
   heapsortEdges(edges);
 
-  std::vector<Union_by_rank<int>> components(G.V);
+  std::vector<Tree_node<int>*> components(G.V);
   for(int i = 0 ; i < G.V ; i++)
   {
-    //components[i] = Union_by_rank<Vertex>->make_set(i);
+    components[i] = new Tree_node<int>();
+    components[i]->Make_Set(i);
   }
+  
   int m = edges.size();
   for(int i = 0 ; i < m ; i++)
   {
     int u = edges[i].v1;
     int v = edges[i].v2;
     //se estiverem em componentes diferentes...
-    if(components[u].Find_Set() != components[v].Find_Set())
+    if(components[u]->Find_Set() != components[v]->Find_Set())
     {
       T.add_edge(edges[i].v1,edges[i].v2,edges[i].weight);
-      //Union_by_rank.Union(find_set(u), find_set(v));
-    }
-  }
-}
-
-void kruskal_hs_pc(Graph G, MST &T)
-{
-  std::vector<Edge> edges;
-  for(int i = 0 ; i < G.V ; i++)
-  {
-    for(int j = 0 ; j < (int)G.edges[i].size() ; j++)
-    {
-      edges.push_back(Edge(i, G.edges[i][j],G.weights[i][j]));
-    }
-  }
-  //tem que trocar a função de compare (pesquisar como)
-  heapsortEdges(edges);
-
-  std::vector<Path_Compression<int>> components(G.V);
-  for(int i = 0 ; i < G.V ; i++)
-  {
-    //components[i] = Path_Compression<Vertex>->make_set(i);
-  }
-  int m = edges.size();
-  for(int i = 0 ; i < m ; i++)
-  {
-    int u = edges[i].v1;
-    int v = edges[i].v2;
-    //se estiverem em componentes diferentes...
-    if(components[u].Find_Set() != components[v].Find_Set())
-    {
-      T.add_edge(edges[i].v1,edges[i].v2,edges[i].weight);
-      //Path_Compression.Union(find_set(u), find_set(v));
+      components[u]->Union(components[u], components[v]);
     }
   }
 }
  
-void kruskal_cs_ubr(Graph G, MST &T)
+void kruskal_cs(Graph G, MST &T)
 {
   std::vector<Edge> edges;
   int w_max = 0;
@@ -108,59 +75,26 @@ void kruskal_cs_ubr(Graph G, MST &T)
   std::vector<Edge> edges_sorted;
   CountingSortEdges(edges, edges_sorted, w_max);
 
-  std::vector<Union_by_rank<int>> components(G.V);
+  std::vector<Tree_node<int>*> components(G.V);
   for(int i = 0 ; i < G.V ; i++)
   {
-    //components[i] = Union_by_rank<Vertex>->make_set(i);
+    components[i] = new Tree_node<int>();
+    components[i]->Make_Set(i);
   }
 
+  
   int m = edges_sorted.size();
   for(int i = 0 ; i < m ; i++)
   {
     int u = edges_sorted[i].v1;
     int v = edges_sorted[i].v2;
     //se estiverem em componentes diferentes...
-    if(components[u].Find_Set() != components[v].Find_Set())
+    if(components[u]->Find_Set() != components[v]->Find_Set())
     {
       T.add_edge(edges_sorted[i].v1,edges_sorted[i].v2,edges_sorted[i].weight);
-      //Union_by_rank.Union(find_set(u), find_set(v));
+      components[u]->Union(components[u], components[v]);
     }
   }
 }
-
-void run_kruskal_cs_pc(Graph G, MST &T)
-{
-  std::vector<Edge> edges;
-  int w_max = 0;
-  for(int i = 0 ; i < G.V ; i++)
-  {
-    for(int j = 0 ; j < (int)G.edges[i].size() ; j++)
-    {
-      w_max = std::max(w_max, G.weights[i][j]);
-      edges.push_back(Edge(i, G.edges[i][j],G.weights[i][j]));
-    }
-  }
-  //tem que trocar a função de compare (pesquisar como)
-  std::vector<Edge> edges_sorted;
-  CountingSortEdges(edges, edges_sorted, w_max);
-
-  std::vector<Path_Compression<int>> components(G.V);
-  for(int i = 0 ; i < G.V ; i++)
-  {
-    //components[i] = Path_Compression<int>->make_set(i);
-  }
-
-  int m = edges_sorted.size();
-  for(int i = 0 ; i < m ; i++)
-  {
-    int u = edges_sorted[i].v1;
-    int v = edges_sorted[i].v2;
-    //se estiverem em componentes diferentes...
-    if(components[u].Find_Set() != components[v].Find_Set())
-    {
-      T.add_edge(edges_sorted[i].v1,edges_sorted[i].v2,edges_sorted[i].weight);
-      //Path_Compression.Union(find_set(u), find_set(v));
-    }
-  }}
 
 #endif

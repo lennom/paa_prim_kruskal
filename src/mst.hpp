@@ -28,6 +28,13 @@ struct Edge_compare
   }  
 }; 
 
+struct Edge_heapsort_compare  
+{  
+  bool operator()(const Edge& l, const Edge& r)  
+  {  
+    return l.weight < r.weight;  
+  }  
+}; 
 
 class MST  
 {

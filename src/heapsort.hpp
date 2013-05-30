@@ -38,8 +38,8 @@ void heapsort(int v[])
 template <typename Iterator>
 void heapsort_algorithm_Edges(Iterator begin, Iterator end)
 {
-  std::make_heap(begin, end, Edge_compare);
-  std::sort_heap(begin, end, Edge_compare);
+  std::make_heap(begin, end, Edge_heapsort_compare());
+  std::sort_heap(begin, end, Edge_heapsort_compare());
 }
 
 void heapsortEdges(std::vector<Edge> &v)

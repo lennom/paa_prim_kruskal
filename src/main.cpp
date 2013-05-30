@@ -7,19 +7,17 @@
   3. Algoritmo de Prim utilizando a ﬁla de prioridade sobre as arestas.
   4. Algoritmo de Prim utilizando a ﬁla de prioridade com a operação change-key sobre os vértices.
 
-  . heapsort                           [working]
-  . counting sort                      [working]
+  . heapsort                           [done]
+  . counting sort                      [done]
   . union by rank                      [----]
   . paht compression                   [----]
   . fila de prioridades                [done]
   . fila de prioridades com change-key [----]
-  . kruskal                            [----]
+  . kruskal                            [done]
   . prim                               [done]
 
-  kruskal_hs_ubr()                     [working]
-  kruskal_hs_pc()                      [----]
-  kruskal_cs_ubr()                     [----]
-  kruskal_cs_pc()                      [----]
+  kruskal_hs()                         [working]
+  kruskal_cs()                         [----]
   prim_edges()                         [done]
   prim_vertex()                        [----]
 
@@ -48,29 +46,19 @@
 #include "kruskal.hpp"
 #include "prim.hpp"
 
-#include "union_by_rank.hpp"
-#include "path_compression.hpp"
+#include "tree_node.hpp"
 
 #include <iostream>
 #include <queue>
 
 #include <stdio.h>
- 
-void prim_edges();
+
+void run_kruskal_hs(Graph g, int n);
+void run_kruskal_cs(Graph g, int n);
+void run_prim_edges(Graph g, int n);
+void run_prim_vertex(Graph g, int n);
 
 int main()
-{
-  //run_kruskal_hs_ubr();
-  //run_kruskal_hs_pc();
-  //run_kruskal_cs_ubr();
-  //run_kruskal_cs_pc();
-  run_prim_edges();
-  //run_prim_vertex();
-
-  return 0;
-}
-
-void run_prim_edges()
 {
   int n;
   std::cin >> n;
@@ -80,6 +68,43 @@ void run_prim_edges()
   {
     g.add_edge(v1-1,v2-1,risco);
   }
+
+  run_kruskal_hs(g, n);
+  run_kruskal_cs(g, n);
+  run_prim_edges(g, n);
+  run_prim_vertex(g, n);
+
+  return 0;
+}
+
+void run_kruskal_hs(Graph g, int n)
+{}
+
+void run_kruskal_cs(Graph g, int n)
+{
+  printf("Running Kruskal Algorithm\n");
+  printf("Sort method: Counting Sort\n");
+  printf("Struct component: Union by rank\n");
+  std::vector<int> cost;
+  MST mst(n);
+  kruskal_cs(g,mst);
+  
+  /*for(int i = 0 ; i < (int)cost.size(); i++)
+  {
+    std::cout << i+1 << ": " << cost[i] << std::endl;
+  }*/
+
+  printf("Prim Algorithm MST edges result:\n");
+  for(int i = 0 ; i < (int)mst.edges.size() ; i++)
+  {
+    printf("%d %d %d\n", mst.edges[i].v1+1, mst.edges[i].v2+1, mst.edges[i].weight);
+  }
+}
+
+void run_prim_edges(Graph g, int n)
+{
+  printf("Running Prim Algorithm\n");
+  printf("Struct: Priority Queue on Edges\n");
   std::vector<int> cost;
   MST mst(n);
   prim_edges(g,cost,mst);
@@ -95,3 +120,6 @@ void run_prim_edges()
     printf("%d %d %d\n", mst.edges[i].v1+1, mst.edges[i].v2+1, mst.edges[i].weight);
   }
 }
+
+void run_prim_vertex(Graph g, int n)
+{}
