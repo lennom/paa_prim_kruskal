@@ -33,4 +33,18 @@ void heapsort(int v[])
   heapsort_algorithm(v, v+VSIZE);
 }
 
+//da pra tentar deixar mais genérico depois, mas por enquanto
+//deixa assim que funciona
+template <typename Iterator>
+void heapsort_algorithm_Edges(Iterator begin, Iterator end)
+{
+  std::make_heap(begin, end, Edge_compare);
+  std::sort_heap(begin, end, Edge_compare);
+}
+
+void heapsortEdges(std::vector<Edge> &v)
+{
+  heapsort_algorithm_Edges(v.begin(), v.end());
+}
+
 #endif

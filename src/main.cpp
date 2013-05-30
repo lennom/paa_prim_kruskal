@@ -7,14 +7,21 @@
   3. Algoritmo de Prim utilizando a ﬁla de prioridade sobre as arestas.
   4. Algoritmo de Prim utilizando a ﬁla de prioridade com a operação change-key sobre os vértices.
 
-  . heapsort                           [done]
-  . counting sort                      [done]
+  . heapsort                           [working]
+  . counting sort                      [working]
   . union by rank                      [----]
   . paht compression                   [----]
   . fila de prioridades                [done]
   . fila de prioridades com change-key [----]
   . kruskal                            [----]
   . prim                               [done]
+
+  kruskal_hs_ubr()                     [working]
+  kruskal_hs_pc()                      [----]
+  kruskal_cs_ubr()                     [----]
+  kruskal_cs_pc()                      [----]
+  prim_edges()                         [done]
+  prim_vertex()                        [----]
 
   Input:
   [número de vértices]
@@ -53,17 +60,17 @@ void prim_edges();
 
 int main()
 {
-  //kruskal_hs_ubr();
-  //kruskal_hs_pc();
-  //kruskal_cs_ubr();
-  //kruskal_cs_pc();
-  prim_edges();
-  //prim_vertex();
+  //run_kruskal_hs_ubr();
+  //run_kruskal_hs_pc();
+  //run_kruskal_cs_ubr();
+  //run_kruskal_cs_pc();
+  run_prim_edges();
+  //run_prim_vertex();
 
   return 0;
 }
 
-void prim_edges()
+void run_prim_edges()
 {
   int n;
   std::cin >> n;
@@ -75,7 +82,7 @@ void prim_edges()
   }
   std::vector<int> cost;
   MST mst(n);
-  prim(g,cost,mst);
+  prim_edges(g,cost,mst);
   
   /*for(int i = 0 ; i < (int)cost.size(); i++)
   {

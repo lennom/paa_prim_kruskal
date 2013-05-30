@@ -25,7 +25,12 @@ Good Implementation:
 
 #include <queue>
 
-void prim(Graph G, std::vector<int> &a, MST &mst, int vi = 0)
+void prim_vertex()
+{
+
+}
+
+void prim_edges(Graph G, std::vector<int> &a, MST &mst, int vi = 0)
 {
   //init the costs of each node at the graph
   a.clear();

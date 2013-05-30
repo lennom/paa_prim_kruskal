@@ -1,7 +1,14 @@
 #ifndef _UNION_BY_RANK_H_
 #define _UNION_BY_RANK_H_
 
-template<class T>
+class Vertex
+{
+public:
+  Vertex() : n(0) {}
+  int n;
+};
+
+template<class T = Vertex>
 class Union_by_rank  
 {
 public:

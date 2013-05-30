@@ -11,6 +11,10 @@ public:
     : v1(vi), v2(vf), weight(w)
   {}
 
+  Edge() 
+    : v1(0), v2(0), weight(0)
+  {}
+
   int v1;
   int v2;
   int weight;
@@ -28,12 +32,12 @@ struct Edge_compare
 class MST  
 {
 public:
-  MST(bool _directed = false) : directed(_directed)
+  MST()
   {
     V = 0;
   }
 
-  MST(int nNodes, bool _directed = false) : directed(_directed)
+  MST(int nNodes)
   {
     V = nNodes;
   }
@@ -47,21 +51,10 @@ public:
       std::cout << "error on vertex index." << std::endl;
       return;
     }
-
-    //adiciona apenas (v1,v2) 
-    if(directed)
-    {
-      edges.push_back(Edge(v1,v2,w));
-    }
-    //grafo não direcionado (v1,v2) = (v2,v1)
-    else
-    {
-      edges.push_back(Edge(v1,v2,w));
-      edges.push_back(Edge(v2,v1,w));
-    }
+    edges.push_back(Edge(v1,v2,w));
+    //edges.push_back(Edge(v2,v1,w));
   }
 
-  bool directed;
   int V;
   std::vector<Edge> edges;
 };
