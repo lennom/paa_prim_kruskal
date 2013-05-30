@@ -9,18 +9,15 @@
 
   . heapsort                           [done]
   . counting sort                      [done]
-  . union by rank                      [----]
-  . paht compression                   [----]
+  . union by rank & path compression   [working]
   . fila de prioridades                [done]
   . fila de prioridades com change-key [----]
   . kruskal                            [done]
   . prim                               [done]
 
-  kruskal_hs()                         [working]
-  kruskal_cs()                         [----]
-  prim_edges()                         [done]
-  prim_vertex()                        [----]
-
+  . kruskal                            [done]
+  . prim                               [done]
+ 
   Input:
   [número de vértices]
   [aresta 1, vértice 1] [aresta 1, vértice 2] [risco aresta 1]
@@ -78,23 +75,31 @@ int main()
 }
 
 void run_kruskal_hs(Graph g, int n)
-{}
+{
+  printf("Running Kruskal Algorithm\n");
+  printf("Sort method: Heapsort\n");
+
+  MST mst(n);
+
+  kruskal_hs(g,mst);
+  
+  printf("Kruskal Heapsort Algorithm MST edges result:\n");
+  for(int i = 0 ; i < (int)mst.edges.size() ; i++)
+  {
+    printf("%d %d %d\n", mst.edges[i].v1+1, mst.edges[i].v2+1, mst.edges[i].weight);
+  }
+}
 
 void run_kruskal_cs(Graph g, int n)
 {
   printf("Running Kruskal Algorithm\n");
   printf("Sort method: Counting Sort\n");
-  printf("Struct component: Union by rank\n");
-  std::vector<int> cost;
+
   MST mst(n);
+
   kruskal_cs(g,mst);
   
-  /*for(int i = 0 ; i < (int)cost.size(); i++)
-  {
-    std::cout << i+1 << ": " << cost[i] << std::endl;
-  }*/
-
-  printf("Prim Algorithm MST edges result:\n");
+  printf("Kruskal Counting Sort Algorithm MST edges result:\n");
   for(int i = 0 ; i < (int)mst.edges.size() ; i++)
   {
     printf("%d %d %d\n", mst.edges[i].v1+1, mst.edges[i].v2+1, mst.edges[i].weight);
@@ -114,7 +119,7 @@ void run_prim_edges(Graph g, int n)
     std::cout << i+1 << ": " << cost[i] << std::endl;
   }*/
 
-  printf("MST edges result:\n");
+  printf("Prim Edges Algorithm MST edges result:\n");
   for(int i = 0 ; i < (int)mst.edges.size() ; i++)
   {
     printf("%d %d %d\n", mst.edges[i].v1+1, mst.edges[i].v2+1, mst.edges[i].weight);
@@ -122,4 +127,22 @@ void run_prim_edges(Graph g, int n)
 }
 
 void run_prim_vertex(Graph g, int n)
-{}
+{
+  printf("Running Prim Algorithm\n");
+  printf("Struct: Priority Queue on Vertex with Change-Key\n");
+
+  std::vector<int> cost;
+  MST mst(n);
+  prim_vertex(g,cost,mst);
+  
+  /*for(int i = 0 ; i < (int)cost.size(); i++)
+  {
+    std::cout << i+1 << ": " << cost[i] << std::endl;
+  }*/
+
+  printf("Prim Vertex Algorithm MST edges result:\n");
+  for(int i = 0 ; i < (int)mst.edges.size() ; i++)
+  {
+    printf("%d %d %d\n", mst.edges[i].v1+1, mst.edges[i].v2+1, mst.edges[i].weight);
+  }
+}

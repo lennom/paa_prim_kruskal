@@ -35,7 +35,6 @@ void kruskal_hs(Graph G, MST &T)
       edges.push_back(Edge(i, G.edges[i][j],G.weights[i][j]));
     }
   }
-  //tem que trocar a função de compare (pesquisar como)
   heapsortEdges(edges);
 
   std::vector<Tree_node<int>*> components(G.V);
@@ -44,18 +43,23 @@ void kruskal_hs(Graph G, MST &T)
     components[i] = new Tree_node<int>();
     components[i]->Make_Set(i);
   }
-  
+
   int m = edges.size();
   for(int i = 0 ; i < m ; i++)
   {
     int u = edges[i].v1;
     int v = edges[i].v2;
-    //se estiverem em componentes diferentes...
     if(components[u]->Find_Set() != components[v]->Find_Set())
     {
       T.add_edge(edges[i].v1,edges[i].v2,edges[i].weight);
       components[u]->Union(components[u], components[v]);
     }
+  }
+
+  int csize = (int)components.size();
+  for(int i = 0 ; i < csize ; i++)
+  {
+    delete components[i];
   }
 }
  
@@ -71,7 +75,6 @@ void kruskal_cs(Graph G, MST &T)
       edges.push_back(Edge(i, G.edges[i][j],G.weights[i][j]));
     }
   }
-  //tem que trocar a função de compare (pesquisar como)
   std::vector<Edge> edges_sorted;
   CountingSortEdges(edges, edges_sorted, w_max);
 
@@ -81,8 +84,7 @@ void kruskal_cs(Graph G, MST &T)
     components[i] = new Tree_node<int>();
     components[i]->Make_Set(i);
   }
-
-  
+    
   int m = edges_sorted.size();
   for(int i = 0 ; i < m ; i++)
   {
@@ -94,6 +96,12 @@ void kruskal_cs(Graph G, MST &T)
       T.add_edge(edges_sorted[i].v1,edges_sorted[i].v2,edges_sorted[i].weight);
       components[u]->Union(components[u], components[v]);
     }
+  }
+
+  int csize = (int)components.size();
+  for(int i = 0 ; i < csize ; i++)
+  {
+    delete components[i];
   }
 }
 

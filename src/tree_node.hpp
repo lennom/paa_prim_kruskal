@@ -5,12 +5,12 @@ template<class T>
 class Tree_node  
 {
 public:
-  pc_node()
+  Tree_node()
   {
     m_head = NULL;
   }
 
-  ~pc_node()
+  ~Tree_node()
   {
     m_head = NULL;
   }
@@ -22,21 +22,41 @@ public:
     height = 0;
   }
 
-  void Union(ubr_node* t1, ubr_node* t2)
+  Tree_node* Find_Set_Reference()
   {
-    if(t1->height == t2->height)
+    Tree_node* aux = this;
+    while(aux->m_head != NULL)
+      aux = aux->m_head;
+    
+    return aux;
+  }
+
+  void Union(Tree_node* u, Tree_node* v)
+  {
+    Tree_node* t1 = u->Find_Set_Reference(); 
+    Tree_node* t2 = v->Find_Set_Reference();
+    if(t1->height >= t2->height)
     {
       t1->m_head = t2;
+      t2->height = std::max(t2->height, t1->height+1);
     }
-
+    else if(t1->height < t2->height)
+    {
+      t2->m_head = t1;
+      t1->height = std::max(t1->height, t2->height+1);
+    }
   }
 
   T Find_Set()
   {
-    return m_head;
+    Tree_node* aux = this;
+    while(aux->m_head != NULL)
+      aux = aux->m_head;
+    
+    return aux->m_value;
   }
 
-  ubr_node* m_head;
+  Tree_node* m_head;
   T m_value;
   int height;
 };

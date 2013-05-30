@@ -25,7 +25,7 @@ Good Implementation:
 
 #include <queue>
 
-void prim_vertex()
+void prim_vertex(Graph G, std::vector<int> &a, MST &mst, int vi = 0)
 {
 
 }
