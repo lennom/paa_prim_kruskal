@@ -25,11 +25,65 @@ Good Implementation:
 
 #include <queue>
 
-void prim_vertex(Graph G, std::vector<int> &a, MST &mst, int vi = 0)
+//O(n) extractMin operations
+//O(m) changeKey operations
+void prim_vertex(Graph G, std::vector<int> &a, MST &T, int vi = 0)
 {
+  std::vector<Edge> edges;
+  for(int i = 0 ; i < G.V ; i++)
+  {
+    for(int j = 0 ; j < (int)G.edges[i].size() ; j++)
+    {
+      edges.push_back(Edge(i, G.edges[i][j],G.weights[i][j]));
+    }
+  }
+  std::vector<int> S;
+  std::vector<int> a;
+  std::vector<int> e;
+  for(int i = 0 ; i < G.V ; i++)
+  {
+    S.push_back(0);
+    a.push_back(std::numeric_limits<int>::max());
+    e.push_back(-1);
+  }
+  S[vi] = 1;
 
+  //O(n + 2m)
+  for(int v = 0 ; v < G.V ; v++)
+  {
+    if(S[v] == 0)
+    {
+      for(int j = 0 ; j < (int)G.edges[v].size() ; j++)
+      {
+        if(S[G.edges[v][j]] == 1)
+        {
+          if(a[v] > G.weights[v][j])
+          {
+            a[v] = G.weights[v][j];
+            e[v] = j;
+          }
+        }
+      }
+    }
+  }
+  
+  while(true) //S =/= V
+  {
+    //extractMin Operation
+    //pega v com mínimo a[v]
+
+    //T = T U (e(v), V)
+
+    //S = S U v
+
+    //changeKey Operations
+    //atualiza arrays 'a' e 'e'
+  }
 }
 
+//Number of iterations = O(n), where n is number of vertices
+//Picking e is O(m) where m is the number of edges
+//Priority queue: O(mlgn), m edges and n vertices
 void prim_edges(Graph G, std::vector<int> &a, MST &mst, int vi = 0)
 {
   //init the costs of each node at the graph
