@@ -1,4 +1,4 @@
-1. Algoritmo de Kruskal utilizando o heap sort e a estrutura union-ﬁnd (utilizando as heurísticas de union by rank e path compression).
-2. Algoritmo de Kruskal utilizando o counting sort e a estrutura union-ﬁnd (utilizando as heurísticas de union by rank e path compression).
-3. Algoritmo de Prim utilizando a ﬁla de prioridade sobre as arestas.
-4. Algoritmo de Prim utilizando a ﬁla de prioridade com a operação change-key sobre os vértices.
+1. Kruskal algorithm using Heap Sort and union-find structure (using union by rank and path compression heuristics).
+2. Kruskal algorithm using Counting Sort and union-find structure (using union by rank and path compression heuristics).
+3. Prim algorithm using priority queue on the edges.
+4. Prim algorithm using priority queue with the change key operation on the vertices.
