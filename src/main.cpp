@@ -131,9 +131,8 @@ void run_prim_vertex(Graph g, int n)
   printf("Running Prim Algorithm\n");
   printf("Struct: Priority Queue on Vertex with Change-Key\n");
 
-  std::vector<int> cost;
-  MST mst(n);
-  prim_vertex(g,cost,mst);
+ MST mst(n);
+  prim_vertex(g,mst);
   
   /*for(int i = 0 ; i < (int)cost.size(); i++)
   {

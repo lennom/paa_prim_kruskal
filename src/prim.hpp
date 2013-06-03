@@ -23,11 +23,13 @@ Good Implementation:
 #include "graph.hpp"
 #include "mst.hpp"
 
+#include "pq_changekey.hpp"
+
 #include <queue>
 
 //O(n) extractMin operations
 //O(m) changeKey operations
-void prim_vertex(Graph G, std::vector<int> &a, MST &T, int vi = 0)
+void prim_vertex(Graph G, MST &T, int vi = 0)
 {
   std::vector<Edge> edges;
   for(int i = 0 ; i < G.V ; i++)
@@ -38,12 +40,12 @@ void prim_vertex(Graph G, std::vector<int> &a, MST &T, int vi = 0)
     }
   }
   std::vector<int> S;
-  std::vector<int> a;
+  PQueue_CKey<int> a;
   std::vector<int> e;
   for(int i = 0 ; i < G.V ; i++)
   {
     S.push_back(0);
-    a.push_back(std::numeric_limits<int>::max());
+    a.data.push_back(std::numeric_limits<int>::max());
     e.push_back(-1);
   }
   S[vi] = 1;
@@ -57,9 +59,9 @@ void prim_vertex(Graph G, std::vector<int> &a, MST &T, int vi = 0)
       {
         if(S[G.edges[v][j]] == 1)
         {
-          if(a[v] > G.weights[v][j])
+          if(a.data[v] > G.weights[v][j])
           {
-            a[v] = G.weights[v][j];
+            a.data[v] = G.weights[v][j];
             e[v] = j;
           }
         }
@@ -67,15 +69,15 @@ void prim_vertex(Graph G, std::vector<int> &a, MST &T, int vi = 0)
     }
   }
   
-  while(true) //S =/= V
+  while(false) //S =/= V
   {
-    //extractMin Operation
-    //pega v com mínimo a[v]
+    int v = a.extractMin();
+    
+    T.add_edge(v, e[v], a.data[v]);
 
-    //T = T U (e(v), V)
+    S[v] = 1;
 
-    //S = S U v
-
+    //O(m) changeKey operations
     //changeKey Operations
     //atualiza arrays 'a' e 'e'
   }
@@ -116,7 +118,6 @@ void prim_edges(Graph G, std::vector<int> &a, MST &mst, int vi = 0)
       if(S[G.edges[u][i]] == 0)
       {
         e.push(Edge(u,G.edges[u][i],G.weights[u][i]));
-        //printf("added %d %d %d\n", u, G.edges[u][i], G.weights[u][i]);
       }
     }
 
