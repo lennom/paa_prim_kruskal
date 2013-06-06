@@ -45,6 +45,8 @@
 
 #include "tree_node.hpp"
 
+#include "heap.hpp"
+
 #include <iostream>
 #include <queue>
 
@@ -70,7 +72,7 @@ int main()
   run_kruskal_cs(g, n);
   run_prim_edges(g, n);
   run_prim_vertex(g, n);
-
+  
   return 0;
 }
 
