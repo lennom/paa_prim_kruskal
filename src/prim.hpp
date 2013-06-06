@@ -23,69 +23,51 @@ Good Implementation:
 #include "graph.hpp"
 #include "mst.hpp"
 
+#include "heap.hpp"
+#include "vertex.hpp"
 #include "pq_changekey.hpp"
 
 #include <queue>
 
-//O(n) extractMin operations
-//O(m) changeKey operations
+//O(mlgn)
 void prim_vertex(Graph G, MST &T, int vi = 0)
 {
-  std::vector<Edge> edges;
-  for(int i = 0 ; i < G.V ; i++)
-  {
-    for(int j = 0 ; j < (int)G.edges[i].size() ; j++)
-    {
-      edges.push_back(Edge(i, G.edges[i][j],G.weights[i][j]));
-    }
-  }
+  Heap_min_Vertex heap;
   std::vector<int> S;
-  PQueue_CKey<int> a;
-  std::vector<int> e;
   for(int i = 0 ; i < G.V ; i++)
   {
     S.push_back(0);
-    a.data.push_back(std::numeric_limits<int>::max());
-    e.push_back(-1);
+    heap.insert(Vertex(i, std::numeric_limits<int>::max(), -1));
   }
-  S[vi] = 1;
 
-  //O(n + 2m)
-  for(int v = 0 ; v < G.V ; v++)
+  heap.decrease_key(vi,0);
+  Vertex v;
+  S[vi] = 1;
+  while(!heap.is_empty())
   {
-    if(S[v] == 0)
+    v = heap.deletemin();
+    S[v.id] = 1;
+    if(v.prev != -1)
     {
-      for(int j = 0 ; j < (int)G.edges[v].size() ; j++)
-      {
-        if(S[G.edges[v][j]] == 1)
+      T.add_edge(v.prev,v.id,v.weight);
+    }
+    
+    for(int i = 0 ; i < (int)G.edges[v.id].size(); i++)
+    {
+      if(S[v.id] != S[G.edges[v.id][i]]){
+        if(heap.get_cost(G.edges[v.id][i]) > G.weights[v.id][i])
         {
-          if(a.data[v] > G.weights[v][j])
-          {
-            a.data[v] = G.weights[v][j];
-            e[v] = j;
-          }
+          heap.set_previous(G.edges[v.id][i], v.id);
+          heap.decrease_key(G.edges[v.id][i], G.weights[v.id][i]);
         }
       }
     }
-  }
-  
-  while(false) //S =/= V
-  {
-    int v = a.extractMin();
-    
-    T.add_edge(v, e[v], a.data[v]);
-
-    S[v] = 1;
-
-    //O(m) changeKey operations
-    //changeKey Operations
-    //atualiza arrays 'a' e 'e'
   }
 }
 
 //Number of iterations = O(n), where n is number of vertices
 //Picking e is O(m) where m is the number of edges
-//Priority queue: O(mlgn), m edges and n vertices
+//Priority queue: O(mlgm), m edges and n vertices
 void prim_edges(Graph G, std::vector<int> &a, MST &mst, int vi = 0)
 {
   //init the costs of each node at the graph
