@@ -79,7 +79,7 @@ public:
   void positions()
   {
     std::cout << "Positions: ";
-    for(int i = 0 ; i < position.size(); i++)
+    for(int i = 0 ; i < (int)position.size(); i++)
     {
       std::cout << i << "-" << position[i] << "  ";
     }
