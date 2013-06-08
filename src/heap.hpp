@@ -5,12 +5,22 @@
 #include <iostream>
 
 #include "vertex.hpp"
+#include "mst.hpp"
 
+//Implementação de um heap com change Key para vértices de um grafo
 class Heap_min_Vertex
 {
 public:
   Heap_min_Vertex()
   {
+  }
+
+  Heap_min_Vertex(int n)
+  {
+    for(int i = 0 ; i < n ; i++)
+    {
+      insert(Vertex(i, std::numeric_limits<int>::max(), -1));
+    }
   }
 
   ~Heap_min_Vertex()
@@ -29,17 +39,17 @@ public:
   {
     heap.push_back(element);
     position.push_back(heap.size() - 1);
-    heapifyup(heap.size() - 1);
+    heapifyup(position[heap.size() - 1]);
   }
 
   Vertex deletemin()
   {
     Vertex min = heap.front();
-    position[min.id] = -1;
-    heap[0] = heap.at((int)heap.size() - 1);
+    position[min.id] = heap.size() - 1;
+    heap[0] = heap[(int)heap.size() - 1];
     position[heap[0].id] = 0;
     heap.pop_back();
-    heapifydown(0);
+    heapifydown(position[heap[0].id]);
     return min;
   }
 
@@ -70,10 +80,10 @@ public:
     return heap.empty();
   }
 
-  void decrease_key(int index, int weight)
+  void decrease_key(int id, int weight)
   {
-    heap[position[index]].weight = weight;
-    heapifyup(position[index]);
+    heap[position[id]].weight = weight;
+    heapifyup(position[id]);
   }
 
   void positions()
@@ -86,9 +96,9 @@ public:
     std::cout << std::endl;
   }
 
-  void set_previous(int index, int prev)
+  void set_previous(int id, int prev)
   {
-    heap[position[index]].prev = prev;
+    heap[position[id]].prev = prev;
   }
 
   void test()
@@ -109,9 +119,9 @@ public:
     v.print();
   }
 
-  int get_cost(int index)
+  int get_cost(int id)
   {
-    return heap[position[index]].weight;
+    return heap[position[id]].weight;
   }
 
 private:
@@ -144,6 +154,7 @@ private:
     {
       Vertex tmp = heap[parent(index)];
       int tmpPos = position[tmp.id];
+      
       position[tmp.id] = index;
       position[heap[index].id] = tmpPos;
 
@@ -154,24 +165,32 @@ private:
   }
 
   void heapifydown(int index)
-  {
-    int child = left(index);
-    if ( ( child > 0 ) && ( right(index) > 0 ) &&
-      ( heap[child].weight > heap[right(index)].weight ) )
-    {
-      child = right(index);
-    }
-    if ( child > 0 )
+  { 
+    int left_child = left(index);
+    int right_child = right(index);
+    if( left_child > 0 && (heap[index].weight > heap[left_child].weight) )
     {
       Vertex tmp = heap[index];
-      int tmpPos = position[heap[index].id];
+      int tmpPos = position[tmp.id];
 
-      position[tmp.id] = child;//position[heap[child].id];
-      position[heap[child].id] = tmpPos;
+      position[tmp.id] = left_child;//position[heap[child].id];
+      position[heap[left_child].id] = tmpPos;
 
-      heap[index] = heap[child];
-      heap[child] = tmp;
-      heapifydown(child);
+      heap[index] = heap[left_child];
+      heap[left_child] = tmp;
+      heapifydown(left_child);
+    }
+    if( right_child > 0 && (heap[index].weight > heap[right_child].weight) )
+    {
+      Vertex tmp = heap[index];
+      int tmpPos = position[tmp.id];
+
+      position[tmp.id] = right_child;//position[heap[child].id];
+      position[heap[right_child].id] = tmpPos;
+
+      heap[index] = heap[right_child];
+      heap[right_child] = tmp;
+      heapifydown(right_child);
     }
   }
 
@@ -179,8 +198,7 @@ private:
   std::vector<Vertex> heap;
 };
 
-
-
+//Implementação de um heap para um tipo qualquer de dados
 template<class T>
 class Heap_min
 {
@@ -305,7 +323,7 @@ private:
     while ( ( index > 0 ) && ( parent(index) >= 0 ) &&
       ( heap[parent(index)] > heap[index] ) )
     {
-      int tmp = heap[parent(index)];
+      T tmp = heap[parent(index)];
       heap[parent(index)] = heap[index];
       heap[index] = tmp;
       index = parent(index);
@@ -315,6 +333,37 @@ private:
   void heapifydown(int index)
   {
     int child = left(index);
+    if ( ( child > 0 ) && ( right(index) > 0 ) &&
+         ( heap[child] > heap[right(index)] ) )
+    {
+        child = right(index);
+    }
+    if ( child > 0 )
+    {
+        T tmp = heap[index];
+        heap[index] = heap[child];
+        heap[child] = tmp;
+        heapifydown(child);
+    }
+
+    /*int left_child = left(index);
+    int right_child = right(index);
+    if( left_child > 0 && (heap[index].weight > heap[left_child].weight) )
+    {
+      T tmp = heap[index];
+      heap[index] = heap[left_child];
+      heap[left_child] = tmp;
+      heapifydown(left_child);
+    }
+    if( right_child > 0 && (heap[index].weight > heap[right_child].weight) )
+    {
+      T tmp = heap[index];
+      heap[index] = heap[right_child];
+      heap[right_child] = tmp;
+      heapifydown(right_child);
+    }*/
+
+    /*int child = left(index);
     if ( ( child > 0 ) && ( right(index) > 0 ) &&
       ( heap[child] > heap[right(index)] ) )
     {
@@ -326,10 +375,126 @@ private:
       heap[index] = heap[child];
       heap[child] = tmp;
       heapifydown(child);
-    }
+    }*/
   }
 
   std::vector<T> heap;
 };
+
+class Heap_min_Edge
+{
+public:
+  Heap_min_Edge()
+  {
+    heap.clear();
+  }
+
+  ~Heap_min_Edge()
+  {
+    heap.clear();
+  }
+
+  void insert(Edge element)
+  {
+    heap.push_back(element);
+    heapifyup(heap.size() - 1);
+  }
+
+  Edge deletemin()
+  {
+    Edge min = heap.front();
+    heap[0] = heap.at((int)heap.size() - 1);
+    heap.pop_back();
+    heapifydown(0);
+    return min;
+  }
+
+  Edge pop()
+  {
+    return deletemin();
+  }
+
+  int size()
+  {
+    return (int)heap.size();
+  }
+  
+  bool is_empty()
+  {
+    return ((int)heap.size() == 0);
+  }
+
+private:
+  int left(int parent)
+  {
+    int i = ( parent << 1 ) + 1; // 2 * parent + 1
+    return ( i < (int)heap.size() ) ? i : -1;
+  }
+
+  int right(int parent)
+  {
+    int i = ( parent << 1 ) + 2; // 2 * parent + 2
+    return ( i < (int)heap.size() ) ? i : -1;
+  }
+
+  int parent(int child)
+  {
+    if (child != 0)
+    {
+      int i = (child - 1) >> 1;
+      return i;
+    }
+    return -1;
+  }
+
+  void heapifyup(int index)
+  {
+    while ( ( index > 0 ) && ( parent(index) >= 0 ) &&
+      ( heap[parent(index)].weight > heap[index].weight ) )
+    {
+      Edge tmp = heap[parent(index)];
+      heap[parent(index)] = heap[index];
+      heap[index] = tmp;
+      index = parent(index);
+    }
+  }
+
+  void heapifydown(int index)
+  {
+    int child = left(index);
+    if ( ( child > 0 ) && ( right(index) > 0 ) &&
+         ( heap[child].weight > heap[right(index)].weight ) )
+    {
+        child = right(index);
+    }
+    if ( child > 0 )
+    {
+        Edge tmp = heap[index];
+        heap[index] = heap[child];
+        heap[child] = tmp;
+        heapifydown(child);
+    }
+
+    /*int left_child = left(index);
+    int right_child = right(index);
+    if( left_child > 0 && (heap[index].weight > heap[left_child].weight) )
+    {
+      Edge tmp = heap[index];
+      heap[index] = heap[left_child];
+      heap[left_child] = tmp;
+      heapifydown(left_child);
+    }
+    if( right_child > 0 && (heap[index].weight > heap[right_child].weight) )
+    {
+      Edge tmp = heap[index];
+      heap[index] = heap[right_child];
+      heap[right_child] = tmp;
+      heapifydown(right_child);
+    }*/
+  }
+
+  std::vector<Edge> heap;
+};
+
 
 #endif

@@ -24,20 +24,20 @@ public:
 
   Tree_node* Find_Set_Reference()
   {
-    int cam_medio = 1;
-    /*if(this->m_head == NULL)
+    //int cam_medio = 1;
+    if(this->m_head == NULL)
     {
-      printf("%d\n", cam_medio);
+      //printf("%d\n", cam_medio);
       return this;
-    }*/
+    }
     Tree_node* aux = this;
     while(aux->m_head != NULL)
     {
       aux = aux->m_head;
-      cam_medio++;
+      //cam_medio++;
     }
-    //m_head = aux;
-    printf("%d\n", cam_medio);
+    m_head = aux;
+    //printf("%d\n", cam_medio);
     return aux;
   }
 
@@ -73,20 +73,20 @@ public:
 
   T Find_Set()
   {
-    int cam_medio = 1;
-    /*if(this->m_head == NULL)
+    //int cam_medio = 1;
+    if(this->m_head == NULL)
     {
-      printf("%d\n", cam_medio);
+      //printf("%d\n", cam_medio);
       return this->m_value;
-    }*/
+    }
     Tree_node* aux = this;
     while(aux->m_head != NULL)
     {
       aux = aux->m_head;
-      cam_medio++;
+      //cam_medio++;
     }
-    //m_head = aux;
-    printf("%d\n", cam_medio);
+    m_head = aux;
+    //printf("%d\n", cam_medio);
     return aux->m_value;
   }
 

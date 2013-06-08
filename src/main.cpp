@@ -60,19 +60,21 @@ void run_prim_vertex(Graph g, int n, std::vector<Edge> edges);
 
 int main()
 {
-  /*std::vector<int> fq;
-  for(int i = 1 ; i < 1000000 ; i++)
+  std::vector<int> fq;
+  for(int i = 1 ; i < 1000000 ; i+=1000)
   {
     for(int j = 0 ; j < i ; j++)
     {
       fq.push_back(rand() % 1000);
     }
+    std::vector<int> r;
     std::clock_t t = std::clock();
+    //CountingSort(fq,r,1000);
     heapsort(fq);
     t = std::clock() - t;
     printf("%f\n",((float)t)/CLOCKS_PER_SEC);
     fq.clear();
-  }*/
+  }
 
 
  /* int soma = 0;
@@ -86,7 +88,7 @@ int main()
   printf("vezes %d\n", vezes);
   printf("%Lf\n", (long double)soma/(long double)vezes);*/
 
-  int n;
+ /* int n;
   std::cin >> n;
   int v1,v2,risco;
   Graph g(n);
@@ -104,14 +106,14 @@ int main()
   run_prim_edges(g, n,edges);
   printf("\n");
   run_prim_vertex(g, n,edges);
-  
+  */
   return 0;
 }
 
 void run_kruskal_hs(Graph g, int n, std::vector<Edge> edges)
 {
-  //printf("Running Kruskal Algorithm\n");
-  //printf("Sort method: Heapsort\n");
+  printf("Running Kruskal Algorithm\n");
+  printf("Sort method: Heapsort\n");
 
   MST mst(n);
   kruskal_hs(g,mst,edges);
@@ -122,8 +124,8 @@ void run_kruskal_hs(Graph g, int n, std::vector<Edge> edges)
     risco_total += mst.edges[i].weight;
     //printf("%d %d %d\n", mst.edges[i].v1+1, mst.edges[i].v2+1, mst.edges[i].weight);
   }
-  //printf("Risco total: %d\n", risco_total);
-  //printf("Risco medio: %Lf\n", (long double)risco_total/(long double)g.edges.size());
+  printf("Risco total: %d\n", risco_total);
+  printf("Risco medio: %Lf\n", (long double)risco_total/(long double)g.edges.size());
 }
 
 void run_kruskal_cs(Graph g, int n, std::vector<Edge> edges)
@@ -150,19 +152,10 @@ void run_prim_edges(Graph g, int n, std::vector<Edge> edges)
 {
   printf("Running Prim Algorithm\n");
   printf("Struct: Priority Queue on Edges\n");
-  std::vector<int> cost;
   MST mst(n);
 
-  std::clock_t t = std::clock();
-  prim_edges(g,cost,mst);
-  t = std::clock() - t;
-
-  /*for(int i = 0 ; i < (int)cost.size(); i++)
-  {
-    std::cout << i+1 << ": " << cost[i] << std::endl;
-  }*/
-
-  printf("Time seconds: %f\n", ((float)t)/CLOCKS_PER_SEC);
+  prim_edges(g,mst);
+  
   int risco_total = 0;
   for(int i = 0 ; i < (int)mst.edges.size() ; i++)
   {
@@ -179,16 +172,8 @@ void run_prim_vertex(Graph g, int n, std::vector<Edge> edges)
   printf("Struct: Priority Queue on Vertex with Change-Key\n");
   MST mst(n);
   
-  std::clock_t t = std::clock();
   prim_vertex(g,mst);
-  t = std::clock() - t;
-
-  /*for(int i = 0 ; i < (int)cost.size(); i++)
-  {
-    std::cout << i+1 << ": " << cost[i] << std::endl;
-  }*/
-
-  printf("Time seconds: %f\n", ((float)t)/CLOCKS_PER_SEC);
+  
   int risco_total = 0;
   for(int i = 0 ; i < (int)mst.edges.size() ; i++)
   {

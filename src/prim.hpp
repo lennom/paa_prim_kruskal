@@ -26,32 +26,30 @@ Good Implementation:
 #include "heap.hpp"
 #include "vertex.hpp"
 #include "pq_changekey.hpp"
-
+#include <ctime>
 #include <queue>
 
 //O(mlgn)
 void prim_vertex(Graph G, MST &T, int vi = 0)
 {
-  Heap_min_Vertex heap;
+  std::clock_t t = std::clock();
+  Heap_min_Vertex heap(G.V);
   std::vector<int> S;
   for(int i = 0 ; i < G.V ; i++)
   {
     S.push_back(0);
-    heap.insert(Vertex(i, std::numeric_limits<int>::max(), -1));
   }
-
   heap.decrease_key(vi,0);
   Vertex v;
   S[vi] = 1;
   while(!heap.is_empty())
   {
-    v = heap.deletemin();
+    v = heap.pop();
     S[v.id] = 1;
     if(v.prev != -1)
     {
       T.add_edge(v.prev,v.id,v.weight);
     }
-    
     for(int i = 0 ; i < (int)G.edges[v.id].size(); i++)
     {
       if(S[v.id] != S[G.edges[v.id][i]]){
@@ -63,35 +61,88 @@ void prim_vertex(Graph G, MST &T, int vi = 0)
       }
     }
   }
+  t = std::clock() - t;
+  printf("Time seconds: %f\n", ((float)t)/CLOCKS_PER_SEC);
 }
 
 //Number of iterations = O(n), where n is number of vertices
 //Picking e is O(m) where m is the number of edges
 //Priority queue: O(mlgm), m edges and n vertices
-void prim_edges(Graph G, std::vector<int> &a, MST &mst, int vi = 0)
+void prim_edges(Graph G, MST &mst, int vi = 0)
 {
-  //init the costs of each node at the graph
-  a.clear();
-  for(int i = 0 ; i < G.V ; i++) a.push_back(std::numeric_limits<int>::max());
+    //Initialize the empty vector with S explored nodes
+  //0 - not explored | 1 - explored
+  std::vector<int> S;
+  for(int i = 0 ; i < G.V ; i++) S.push_back(0);
+  Heap_min_Edge e;
+
+  //init time
+  std::clock_t t = std::clock();
 
   //add the initial node
   std::deque<int> Q;
   Q.push_back(vi);
-  
-  //Initialize the empty vector with S explored nodes
-  //0 - not explored | 1 - explored
-  std::vector<int> S;
-  for(int i = 0 ; i < G.V ; i++) S.push_back(0);
-  
-  std::priority_queue<Edge, std::vector<Edge>, Edge_compare> e;
-  a[vi] = 0;
-    
+  S[vi] = 1;
+
   int u;
   while (!Q.empty())
   {
     u = Q.front();
     Q.pop_front();
 
+    S[u] = 1;
+    //adiciona as arestas que fazem parte do vértices corrente
+    for(int i = 0 ; i < (int)G.edges[u].size() ; i++)
+    {
+      //aresta com extremidade não visitada ainda
+      if(S[G.edges[u][i]] == 0)
+      {
+        e.insert(Edge(u,G.edges[u][i],G.weights[u][i]));
+      }
+    }
+
+    while((int)e.size() > 0)
+    {
+      Edge ex = e.deletemin();
+      if(S[ex.v2] == 0)
+      {
+        //printf("vertex %d added to queue\n", ex.v2);
+        Q.push_back(ex.v2);
+        S[ex.v2] = 1;
+        mst.add_edge(ex.v1,ex.v2,ex.weight);
+        break;
+      }
+    }
+  }
+  t = std::clock() - t;
+  printf("Time seconds: %f\n", ((float)t)/CLOCKS_PER_SEC);
+}
+
+//Number of iterations = O(n), where n is number of vertices
+//Picking e is O(m) where m is the number of edges
+//Priority queue: O(mlgm), m edges and n vertices
+void prim_edges_pqueue(Graph G, MST &mst, int vi = 0)
+{
+  //Initialize the empty vector with S explored nodes
+  //0 - not explored | 1 - explored
+  std::vector<int> S;
+  for(int i = 0 ; i < G.V ; i++) S.push_back(0);
+  std::priority_queue<Edge, std::vector<Edge>, Edge_compare> e;
+
+  //init time
+  std::clock_t t = std::clock();
+
+  //add the initial node
+  std::deque<int> Q;
+  Q.push_back(vi);
+  S[vi] = 1;
+
+  int u;
+  while (!Q.empty())
+  {
+    u = Q.front();
+    Q.pop_front();
+    
     S[u] = 1;
     //adiciona as arestas que fazem parte do vértices corrente
     for(int i = 0 ; i < (int)G.edges[u].size() ; i++)
@@ -111,12 +162,14 @@ void prim_edges(Graph G, std::vector<int> &a, MST &mst, int vi = 0)
       {
         //printf("vertex %d added to queue\n", ex.v2);
         Q.push_back(ex.v2);
+        S[ex.v2] = 1;
         mst.add_edge(ex.v1,ex.v2,ex.weight);
-        a[ex.v2] = ex.weight;
         break;
       }
     }
   }
+  t = std::clock() - t;
+  printf("Time seconds: %f\n", ((float)t)/CLOCKS_PER_SEC);
 }
 
 #endif
