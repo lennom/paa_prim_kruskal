@@ -166,31 +166,23 @@ private:
 
   void heapifydown(int index)
   { 
-    int left_child = left(index);
-    int right_child = right(index);
-    if( left_child > 0 && (heap[index].weight > heap[left_child].weight) )
+    int child = left(index);
+    if ( ( child > 0 ) && ( right(index) > 0 ) &&
+         ( heap[child].weight > heap[right(index)].weight ) )
     {
-      Vertex tmp = heap[index];
-      int tmpPos = position[tmp.id];
-
-      position[tmp.id] = left_child;//position[heap[child].id];
-      position[heap[left_child].id] = tmpPos;
-
-      heap[index] = heap[left_child];
-      heap[left_child] = tmp;
-      heapifydown(left_child);
+        child = right(index);
     }
-    if( right_child > 0 && (heap[index].weight > heap[right_child].weight) )
+    if ( child > 0 && (heap[index].weight > heap[child].weight) )
     {
       Vertex tmp = heap[index];
       int tmpPos = position[tmp.id];
 
-      position[tmp.id] = right_child;//position[heap[child].id];
-      position[heap[right_child].id] = tmpPos;
+      position[tmp.id] = child;//position[heap[child].id];
+      position[heap[child].id] = tmpPos;
 
-      heap[index] = heap[right_child];
-      heap[right_child] = tmp;
-      heapifydown(right_child);
+      heap[index] = heap[child];
+      heap[child] = tmp;
+      heapifydown(child);
     }
   }
 
@@ -338,7 +330,7 @@ private:
     {
         child = right(index);
     }
-    if ( child > 0 )
+    if ( child > 0 && (heap[index] > heap[child]))
     {
         T tmp = heap[index];
         heap[index] = heap[child];
@@ -467,34 +459,16 @@ private:
     {
         child = right(index);
     }
-    if ( child > 0 )
+    if ( child > 0 && (heap[index].weight > heap[child].weight) )
     {
         Edge tmp = heap[index];
         heap[index] = heap[child];
         heap[child] = tmp;
         heapifydown(child);
     }
-
-    /*int left_child = left(index);
-    int right_child = right(index);
-    if( left_child > 0 && (heap[index].weight > heap[left_child].weight) )
-    {
-      Edge tmp = heap[index];
-      heap[index] = heap[left_child];
-      heap[left_child] = tmp;
-      heapifydown(left_child);
-    }
-    if( right_child > 0 && (heap[index].weight > heap[right_child].weight) )
-    {
-      Edge tmp = heap[index];
-      heap[index] = heap[right_child];
-      heap[right_child] = tmp;
-      heapifydown(right_child);
-    }*/
   }
 
   std::vector<Edge> heap;
 };
-
 
 #endif

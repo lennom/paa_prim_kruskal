@@ -23,9 +23,13 @@
 #include "mst.hpp"
 #include "heapsort.hpp"
 #include "tree_node.hpp"
+#include "union_Find.hpp"
 
 #include <ctime>
 
+/////////////////////////////////////////
+// Utilizando Union Find com ponteiros //
+/////////////////////////////////////////
 void kruskal_hs(Graph G, MST &T, std::vector<Edge> edges)
 {
   std::clock_t t = std::clock();
@@ -54,7 +58,7 @@ void kruskal_hs(Graph G, MST &T, std::vector<Edge> edges)
 
   }
   t = std::clock() - t;
-  printf("Time seconds: %f\n", ((float)t)/CLOCKS_PER_SEC);
+  printf("Time seconds (Pointers): %f\n", ((float)t)/CLOCKS_PER_SEC);
 
   int csize = (int)components.size();
   for(int i = 0 ; i < csize ; i++)
@@ -97,13 +101,72 @@ void kruskal_cs(Graph G, MST &T, std::vector<Edge> edges)
     }
   }
   t = std::clock() - t;
-  printf("Time seconds: %f\n", ((float)t)/CLOCKS_PER_SEC);
+  printf("Time seconds (Pointers): %f\n", ((float)t)/CLOCKS_PER_SEC);
 
   int csize = (int)components.size();
   for(int i = 0 ; i < csize ; i++)
   {
     delete components[i];
   }
+}
+///////////////////////////////////////
+// Utilizando Union Find com Vetores //
+///////////////////////////////////////
+void kruskal_hs_vec(Graph G, MST &T, std::vector<Edge> edges)
+{
+  std::clock_t t = std::clock();
+  heapsortEdges(edges);
+
+  Union_Find unf(G.V);
+  
+  int m = edges.size();
+  for(int i = 0 ; i < m ; i++)
+  {
+    int u = edges[i].v1;
+    int v = edges[i].v2;
+
+    int t1 = unf.find_set(u); 
+    int t2 = unf.find_set(v); 
+    if(t1 != t2)
+    {
+      T.add_edge(edges[i].v1,edges[i].v2,edges[i].weight);
+      unf.union_sets(t1, t2);
+    }
+
+  }
+  t = std::clock() - t;
+  printf("Time seconds (Vectors): %f\n", ((float)t)/CLOCKS_PER_SEC);
+}
+ 
+void kruskal_cs_vec(Graph G, MST &T, std::vector<Edge> edges_in)
+{
+  int w_max = 0;
+  for(int i = 0 ; i < (int)edges_in.size() ; i++)
+  {
+    w_max = std::max(w_max, edges_in[i].weight);
+  }
+  std::clock_t t = std::clock();
+  std::vector<Edge> edges;
+  CountingSortEdges(edges_in, edges, w_max);
+
+  Union_Find unf(G.V);
+  
+  int m = edges.size();
+  for(int i = 0 ; i < m ; i++)
+  {
+    int u = edges[i].v1;
+    int v = edges[i].v2;
+
+    int t1 = unf.find_set(u); 
+    int t2 = unf.find_set(v); 
+    if(t1 != t2)
+    {
+      T.add_edge(edges[i].v1,edges[i].v2,edges[i].weight);
+      unf.union_sets(t1, t2);
+    }
+  }
+  t = std::clock() - t;
+  printf("Time seconds (Vectors): %f\n", ((float)t)/CLOCKS_PER_SEC);
 }
 
 #endif

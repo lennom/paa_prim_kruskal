@@ -1,5 +1,5 @@
-#ifndef _PATH_COMPRESSION_HPP_
-#define _PATH_COMPRESSION_HPP_
+#ifndef _TREE_NODE_UNION_FIND_HPP_
+#define _TREE_NODE_UNION_FIND_HPP_
 
 template<class T>
 class Tree_node  

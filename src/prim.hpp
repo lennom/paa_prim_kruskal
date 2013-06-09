@@ -25,12 +25,11 @@ Good Implementation:
 
 #include "heap.hpp"
 #include "vertex.hpp"
-#include "pq_changekey.hpp"
 #include <ctime>
 #include <queue>
 
 //O(mlgn)
-void prim_vertex(Graph G, MST &T, int vi = 0)
+void prim_vertex_vec(Graph G, MST &T, int vi = 0)
 {
   std::clock_t t = std::clock();
   Heap_min_Vertex heap(G.V);
@@ -62,8 +61,45 @@ void prim_vertex(Graph G, MST &T, int vi = 0)
     }
   }
   t = std::clock() - t;
-  printf("Time seconds: %f\n", ((float)t)/CLOCKS_PER_SEC);
+  printf("Time seconds (Heap Vector): %f\n", ((float)t)/CLOCKS_PER_SEC);
 }
+
+//O(mlgn)
+void prim_vertex_pointer(Graph G, MST &T, int vi = 0)
+{
+  std::clock_t t = std::clock();
+  Heap_min_Vertex heap(G.V);
+  std::vector<int> S;
+  for(int i = 0 ; i < G.V ; i++)
+  {
+    S.push_back(0);
+  }
+  heap.decrease_key(vi,0);
+  Vertex v;
+  S[vi] = 1;
+  while(!heap.is_empty())
+  {
+    v = heap.pop();
+    S[v.id] = 1;
+    if(v.prev != -1)
+    {
+      T.add_edge(v.prev,v.id,v.weight);
+    }
+    for(int i = 0 ; i < (int)G.edges[v.id].size(); i++)
+    {
+      if(S[v.id] != S[G.edges[v.id][i]]){
+        if(heap.get_cost(G.edges[v.id][i]) > G.weights[v.id][i])
+        {
+          heap.set_previous(G.edges[v.id][i], v.id);
+          heap.decrease_key(G.edges[v.id][i], G.weights[v.id][i]);
+        }
+      }
+    }
+  }
+  t = std::clock() - t;
+  printf("Time seconds (Heap Vector): %f\n", ((float)t)/CLOCKS_PER_SEC);
+}
+
 
 //Number of iterations = O(n), where n is number of vertices
 //Picking e is O(m) where m is the number of edges
@@ -115,7 +151,7 @@ void prim_edges(Graph G, MST &mst, int vi = 0)
     }
   }
   t = std::clock() - t;
-  printf("Time seconds: %f\n", ((float)t)/CLOCKS_PER_SEC);
+  printf("Time seconds (Heap Min Vector): %f\n", ((float)t)/CLOCKS_PER_SEC);
 }
 
 //Number of iterations = O(n), where n is number of vertices
@@ -169,7 +205,7 @@ void prim_edges_pqueue(Graph G, MST &mst, int vi = 0)
     }
   }
   t = std::clock() - t;
-  printf("Time seconds: %f\n", ((float)t)/CLOCKS_PER_SEC);
+  printf("Time seconds (Priority Queue): %f\n", ((float)t)/CLOCKS_PER_SEC);
 }
 
 #endif

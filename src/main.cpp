@@ -60,7 +60,7 @@ void run_prim_vertex(Graph g, int n, std::vector<Edge> edges);
 
 int main()
 {
-  std::vector<int> fq;
+  /*std::vector<int> fq;
   for(int i = 1 ; i < 1000000 ; i+=1000)
   {
     for(int j = 0 ; j < i ; j++)
@@ -74,7 +74,7 @@ int main()
     t = std::clock() - t;
     printf("%f\n",((float)t)/CLOCKS_PER_SEC);
     fq.clear();
-  }
+  }*/
 
 
  /* int soma = 0;
@@ -88,7 +88,7 @@ int main()
   printf("vezes %d\n", vezes);
   printf("%Lf\n", (long double)soma/(long double)vezes);*/
 
- /* int n;
+  int n;
   std::cin >> n;
   int v1,v2,risco;
   Graph g(n);
@@ -106,7 +106,7 @@ int main()
   run_prim_edges(g, n,edges);
   printf("\n");
   run_prim_vertex(g, n,edges);
-  */
+  
   return 0;
 }
 
@@ -116,16 +116,28 @@ void run_kruskal_hs(Graph g, int n, std::vector<Edge> edges)
   printf("Sort method: Heapsort\n");
 
   MST mst(n);
-  kruskal_hs(g,mst,edges);
+  MST mst_vec(n);
 
+  kruskal_hs(g,mst,edges);
   int risco_total = 0;
   for(int i = 0 ; i < (int)mst.edges.size() ; i++)
   {
     risco_total += mst.edges[i].weight;
     //printf("%d %d %d\n", mst.edges[i].v1+1, mst.edges[i].v2+1, mst.edges[i].weight);
   }
-  printf("Risco total: %d\n", risco_total);
-  printf("Risco medio: %Lf\n", (long double)risco_total/(long double)g.edges.size());
+  printf("Risco total (Pointer): %d\n", risco_total);
+  printf("Risco medio (Pointer): %Lf\n", (long double)risco_total/(long double)g.edges.size());
+
+  printf("\n");
+  kruskal_hs_vec(g,mst_vec,edges);
+  risco_total = 0;
+  for(int i = 0 ; i < (int)mst_vec.edges.size() ; i++)
+  {
+    risco_total += mst_vec.edges[i].weight;
+    //printf("%d %d %d\n", mst.edges[i].v1+1, mst.edges[i].v2+1, mst.edges[i].weight);
+  }
+  printf("Risco total (Vector): %d\n", risco_total);
+  printf("Risco medio (Vector): %Lf\n", (long double)risco_total/(long double)g.edges.size());
 }
 
 void run_kruskal_cs(Graph g, int n, std::vector<Edge> edges)
@@ -134,18 +146,28 @@ void run_kruskal_cs(Graph g, int n, std::vector<Edge> edges)
   printf("Sort method: Counting Sort\n");
 
   MST mst(n);
+  MST mst_vec(n);
 
   kruskal_cs(g,mst,edges);
-  
   int risco_total = 0;
   for(int i = 0 ; i < (int)mst.edges.size() ; i++)
   {
     risco_total += mst.edges[i].weight;
     //printf("%d %d %d\n", mst.edges[i].v1+1, mst.edges[i].v2+1, mst.edges[i].weight);
   }
-  printf("Risco total: %d\n", risco_total);
-  printf("Risco medio: %Lf\n", (long double)risco_total/(long double)g.edges.size());
+  printf("Risco total (Pointer): %d\n", risco_total);
+  printf("Risco medio (Pointer): %Lf\n", (long double)risco_total/(long double)g.edges.size());
   
+  printf("\n");
+  kruskal_cs_vec(g,mst_vec,edges);
+  risco_total = 0;
+  for(int i = 0 ; i < (int)mst_vec.edges.size() ; i++)
+  {
+    risco_total += mst_vec.edges[i].weight;
+    //printf("%d %d %d\n", mst.edges[i].v1+1, mst.edges[i].v2+1, mst.edges[i].weight);
+  }
+  printf("Risco total (Vector): %d\n", risco_total);
+  printf("Risco medio (Vector): %Lf\n", (long double)risco_total/(long double)g.edges.size());
 }
 
 void run_prim_edges(Graph g, int n, std::vector<Edge> edges)
@@ -153,33 +175,56 @@ void run_prim_edges(Graph g, int n, std::vector<Edge> edges)
   printf("Running Prim Algorithm\n");
   printf("Struct: Priority Queue on Edges\n");
   MST mst(n);
+  MST mst_pqueue(n);
 
   prim_edges(g,mst);
-  
   int risco_total = 0;
   for(int i = 0 ; i < (int)mst.edges.size() ; i++)
   {
     risco_total += mst.edges[i].weight;
     //printf("%d %d %d\n", mst.edges[i].v1+1, mst.edges[i].v2+1, mst.edges[i].weight);
   }
-  printf("Risco total: %d\n", risco_total);
-  printf("Risco medio: %Lf\n", (long double)risco_total/(long double)g.edges.size());
+  printf("Risco total (Heap Min Vector): %d\n", risco_total);
+  printf("Risco medio (Heap Min Vector): %Lf\n", (long double)risco_total/(long double)g.edges.size());
+
+  printf("\n");
+  prim_edges_pqueue(g,mst_pqueue);
+  risco_total = 0;
+  for(int i = 0 ; i < (int)mst_pqueue.edges.size() ; i++)
+  {
+    risco_total += mst_pqueue.edges[i].weight;
+    //printf("%d %d %d\n", mst.edges[i].v1+1, mst.edges[i].v2+1, mst.edges[i].weight);
+  }
+  printf("Risco total (Priority Queue): %d\n", risco_total);
+  printf("Risco medio (Priority Queue): %Lf\n", (long double)risco_total/(long double)g.edges.size());
+  
 }
 
 void run_prim_vertex(Graph g, int n, std::vector<Edge> edges)
 {
   printf("Running Prim Algorithm\n");
   printf("Struct: Priority Queue on Vertex with Change-Key\n");
-  MST mst(n);
-  
-  prim_vertex(g,mst);
-  
   int risco_total = 0;
+
+  /*MST mst(n);
+  prim_vertex_pointer(g,mst);
+  risco_total = 0;
   for(int i = 0 ; i < (int)mst.edges.size() ; i++)
   {
     risco_total += mst.edges[i].weight;
     //printf("%d %d %d\n", mst.edges[i].v1+1, mst.edges[i].v2+1, mst.edges[i].weight);
   }
-  printf("Risco total: %d\n", risco_total);
-  printf("Risco medio: %Lf\n", (long double)risco_total/(long double)g.edges.size());
+  printf("Risco total (Heap Pointer): %d\n", risco_total);
+  printf("Risco medio (Heap Pointer): %Lf\n", (long double)risco_total/(long double)g.edges.size());*/
+
+  MST mst_vec(n);
+  prim_vertex_vec(g,mst_vec);
+  risco_total = 0;
+  for(int i = 0 ; i < (int)mst_vec.edges.size() ; i++)
+  {
+    risco_total += mst_vec.edges[i].weight;
+    //printf("%d %d %d\n", mst.edges[i].v1+1, mst.edges[i].v2+1, mst.edges[i].weight);
+  }
+  printf("Risco total (Heap Vector): %d\n", risco_total);
+  printf("Risco medio (Heap Vector): %Lf\n", (long double)risco_total/(long double)g.edges.size());
 }
