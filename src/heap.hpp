@@ -13,10 +13,20 @@ class Heap_min_Vertex
 public:
   Heap_min_Vertex()
   {
+    heapfyDowns = 0;
+    heapfyDown_Max = 0;
+    heapfyUps = 0;
+    heapfyUp_Max = 0;
+    heap.clear();
   }
 
   Heap_min_Vertex(int n)
   {
+    heapfyDowns = 0;
+    heapfyDown_Max = 0;
+    heapfyUps = 0;
+    heapfyUp_Max = 0;
+    heap.clear();
     for(int i = 0 ; i < n ; i++)
     {
       insert(Vertex(i, std::numeric_limits<int>::max(), -1));
@@ -123,7 +133,11 @@ public:
   {
     return heap[position[id]].weight;
   }
-
+  
+  int heapfyDowns;
+  int heapfyDown_Max;
+  int heapfyUps;
+  int heapfyUp_Max;
 private:
   int left(int parent)
   {
@@ -149,6 +163,9 @@ private:
 
   void heapifyup(int index)
   {
+    //////////////////////
+    int hup_max = 0;
+    //////////////////////
     while ( ( index > 0 ) && ( parent(index) >= 0 ) &&
       ( heap[parent(index)].weight > heap[index].weight ) )
     {
@@ -161,29 +178,56 @@ private:
       heap[parent(index)] = heap[index];
       heap[index] = tmp;
       index = parent(index);
+      
+      //////////////////////
+      hup_max++;
+      heapfyUps++;
+      //////////////////////
     }
+    //////////////////////
+    heapfyUp_Max = std::max(heapfyUp_Max, hup_max);
+    //////////////////////
   }
 
   void heapifydown(int index)
   { 
-    int child = left(index);
-    if ( ( child > 0 ) && ( right(index) > 0 ) &&
-         ( heap[child].weight > heap[right(index)].weight ) )
+    //////////////////////
+    int hdn_max = 0;
+    //////////////////////
+    while(true)
     {
-        child = right(index);
-    }
-    if ( child > 0 && (heap[index].weight > heap[child].weight) )
-    {
-      Vertex tmp = heap[index];
-      int tmpPos = position[tmp.id];
+      int child = left(index);
+      if ( ( child > 0 ) && ( right(index) > 0 ) &&
+           ( heap[child].weight > heap[right(index)].weight ) )
+      {
+          child = right(index);
+      }
+      if ( child > 0 && (heap[index].weight > heap[child].weight) )
+      {
+        Vertex tmp = heap[index];
+        int tmpPos = position[tmp.id];
 
-      position[tmp.id] = child;//position[heap[child].id];
-      position[heap[child].id] = tmpPos;
+        position[tmp.id] = child;//position[heap[child].id];
+        position[heap[child].id] = tmpPos;
 
-      heap[index] = heap[child];
-      heap[child] = tmp;
-      heapifydown(child);
+        heap[index] = heap[child];
+        heap[child] = tmp;
+
+        //////////////////////
+        hdn_max++;
+        heapfyDowns++;
+        //////////////////////
+      
+        index = child;
+        //heapifydown(child);
+      }else
+      {
+        break;
+      }
     }
+    //////////////////////
+    heapfyDown_Max = std::max(heapfyDown_Max, hdn_max);
+    //////////////////////
   }
 
   std::vector<int> position;
@@ -324,50 +368,27 @@ private:
 
   void heapifydown(int index)
   {
-    int child = left(index);
-    if ( ( child > 0 ) && ( right(index) > 0 ) &&
-         ( heap[child] > heap[right(index)] ) )
+    while(true)
     {
-        child = right(index);
-    }
-    if ( child > 0 && (heap[index] > heap[child]))
-    {
-        T tmp = heap[index];
-        heap[index] = heap[child];
-        heap[child] = tmp;
-        heapifydown(child);
-    }
+      int child = left(index);
+      if ( ( child > 0 ) && ( right(index) > 0 ) &&
+           ( heap[child] > heap[right(index)] ) )
+      {
+          child = right(index);
+      }
+      if ( child > 0 && (heap[index] > heap[child]))
+      {
+          T tmp = heap[index];
+          heap[index] = heap[child];
+          heap[child] = tmp;
 
-    /*int left_child = left(index);
-    int right_child = right(index);
-    if( left_child > 0 && (heap[index].weight > heap[left_child].weight) )
-    {
-      T tmp = heap[index];
-      heap[index] = heap[left_child];
-      heap[left_child] = tmp;
-      heapifydown(left_child);
+          index = child;
+          //heapifydown(child);
+      }else
+      {
+        break;
+      }
     }
-    if( right_child > 0 && (heap[index].weight > heap[right_child].weight) )
-    {
-      T tmp = heap[index];
-      heap[index] = heap[right_child];
-      heap[right_child] = tmp;
-      heapifydown(right_child);
-    }*/
-
-    /*int child = left(index);
-    if ( ( child > 0 ) && ( right(index) > 0 ) &&
-      ( heap[child] > heap[right(index)] ) )
-    {
-      child = right(index);
-    }
-    if ( child > 0 )
-    {
-      int tmp = heap[index];
-      heap[index] = heap[child];
-      heap[child] = tmp;
-      heapifydown(child);
-    }*/
   }
 
   std::vector<T> heap;
@@ -378,6 +399,10 @@ class Heap_min_Edge
 public:
   Heap_min_Edge()
   {
+    heapfyDowns = 0;
+    heapfyDown_Max = 0;
+    heapfyUps = 0;
+    heapfyUp_Max = 0;
     heap.clear();
   }
 
@@ -416,6 +441,10 @@ public:
     return ((int)heap.size() == 0);
   }
 
+  int heapfyDowns;
+  int heapfyDown_Max;
+  int heapfyUps;
+  int heapfyUp_Max;
 private:
   int left(int parent)
   {
@@ -441,6 +470,9 @@ private:
 
   void heapifyup(int index)
   {
+    //////////////////////
+    int hup_max = 0;
+    //////////////////////
     while ( ( index > 0 ) && ( parent(index) >= 0 ) &&
       ( heap[parent(index)].weight > heap[index].weight ) )
     {
@@ -448,24 +480,51 @@ private:
       heap[parent(index)] = heap[index];
       heap[index] = tmp;
       index = parent(index);
+
+      //////////////////////
+      hup_max++;
+      heapfyUps++;
+      //////////////////////
     }
+    //////////////////////
+    heapfyUp_Max = std::max(heapfyUp_Max, hup_max);
+    //////////////////////
   }
 
   void heapifydown(int index)
   {
-    int child = left(index);
-    if ( ( child > 0 ) && ( right(index) > 0 ) &&
-         ( heap[child].weight > heap[right(index)].weight ) )
+    //////////////////////
+    int hdn_max = 0;
+    //////////////////////
+    while(true)
     {
-        child = right(index);
+      int child = left(index);
+      if ( ( child > 0 ) && ( right(index) > 0 ) &&
+           ( heap[child].weight > heap[right(index)].weight ) )
+      {
+          child = right(index);
+      }
+      if ( child > 0 && (heap[index].weight > heap[child].weight) )
+      {
+          Edge tmp = heap[index];
+          heap[index] = heap[child];
+          heap[child] = tmp;
+      
+          //////////////////////
+          hdn_max++;
+          heapfyDowns++;
+          //////////////////////
+
+          index = child;
+          //heapifydown(child);
+      }else
+      {
+        break;
+      }
     }
-    if ( child > 0 && (heap[index].weight > heap[child].weight) )
-    {
-        Edge tmp = heap[index];
-        heap[index] = heap[child];
-        heap[child] = tmp;
-        heapifydown(child);
-    }
+    //////////////////////
+    heapfyDown_Max = std::max(heapfyDown_Max, hdn_max);
+    //////////////////////
   }
 
   std::vector<Edge> heap;

@@ -60,6 +60,12 @@ void prim_vertex_vec(Graph G, MST &T, int vi = 0)
       }
     }
   }
+
+  printf("Max HeapfyDown (Heap Vector): %d\n", heap.heapfyDown_Max);
+  printf("HeapfyDowns (Heap Vector): %d\n", heap.heapfyDowns);
+  printf("Max HeapfyUp (Heap Vector): %d\n", heap.heapfyUp_Max);
+  printf("HeapfyUps (Heap Vector): %d\n", heap.heapfyUps);
+ 
   t = std::clock() - t;
   printf("Time seconds (Heap Vector): %f\n", ((float)t)/CLOCKS_PER_SEC);
 }
@@ -110,7 +116,7 @@ void prim_edges(Graph G, MST &mst, int vi = 0)
   //0 - not explored | 1 - explored
   std::vector<int> S;
   for(int i = 0 ; i < G.V ; i++) S.push_back(0);
-  Heap_min_Edge e;
+  Heap_min_Edge heap;
 
   //init time
   std::clock_t t = std::clock();
@@ -133,13 +139,13 @@ void prim_edges(Graph G, MST &mst, int vi = 0)
       //aresta com extremidade não visitada ainda
       if(S[G.edges[u][i]] == 0)
       {
-        e.insert(Edge(u,G.edges[u][i],G.weights[u][i]));
+        heap.insert(Edge(u,G.edges[u][i],G.weights[u][i]));
       }
     }
 
-    while((int)e.size() > 0)
+    while((int)heap.size() > 0)
     {
-      Edge ex = e.deletemin();
+      Edge ex = heap.deletemin();
       if(S[ex.v2] == 0)
       {
         //printf("vertex %d added to queue\n", ex.v2);
@@ -150,6 +156,12 @@ void prim_edges(Graph G, MST &mst, int vi = 0)
       }
     }
   }
+
+  printf("Max HeapfyDown (Heap Min Vector): %d\n", heap.heapfyDown_Max);
+  printf("HeapfyDowns (Heap Min Vector): %d\n", heap.heapfyDowns);
+  printf("Max HeapfyUp (Heap Min Vector): %d\n", heap.heapfyUp_Max);
+  printf("HeapfyUps (Heap Min Vector): %d\n", heap.heapfyUps);
+
   t = std::clock() - t;
   printf("Time seconds (Heap Min Vector): %f\n", ((float)t)/CLOCKS_PER_SEC);
 }
