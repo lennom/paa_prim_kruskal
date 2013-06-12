@@ -21,43 +21,52 @@ public:
     sets.clear();
   }
 
-  void union_sets(int s1, int s2)
+  void Union(int t1, int t2)
   {
-    int t1 = find_set(s1);
-    int t2 = find_set(s2);
-
-    //se altura de t1 for maior
-    if(abs(sets[t1]) >= abs(sets[t2]))
+     if(abs(sets[t1]) >= abs(sets[t2]))
     {
       sets[t1] = -1*std::max(abs(sets[t1]), abs(sets[t2]) + 1);
       sets[t2] = t1;
     }
-    else  //altura de t2 é maior
+    else if(abs(sets[t1]) < abs(sets[t2]))
     {
       sets[t2] = -1*std::max(abs(sets[t2]), abs(sets[t1]) + 1);
       sets[t1] = t2;
     }
   }
 
-  int find_set(int index)
+  int Find_Set(int index)
   {
+    //int cam_medio = 0;
     if(sets[index] < 0)
     {
+      //printf("%d\n", cam_medio);
       return index;
     }
     int i = index;
     while(sets[i] >= 0)
     {
       i = sets[i];
+      //cam_medio++;
     }
     sets[index] = i;
+    //printf("%d\n", cam_medio);
     return i;
   }
 
   int height(int set)
   {
-    int a = find_set(set);
+    int a = Find_Set(set);
     return abs(sets[a]+1);
+  }
+
+  void print()
+  {
+    for(int j = 0 ; j < (int)sets.size() ;j++)
+    {
+      std::cout << sets[j] << " ";
+    }
+    std::cout << std::endl;
   }
 
   std::vector<int> sets;

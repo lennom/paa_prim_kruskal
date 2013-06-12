@@ -1,19 +1,3 @@
-/*Kruskal's algorithm:
-	. Consider edges in ascending order of weight
-	. Case 1: If adding and edge e to T creates a cycle, discard e
-	. Case 2: Otherwise, insert e = (u, v) into T
-
-  Bad Implementation:
-  . Sorting the edges
-  . Testing the existence of a cycle whyle considering edge e: O(n) via a DFS(BFS). Nota that a tree has at most n edges.
-  . For all edges O(m*n)
-  . Total complexity O(mlgn)+O(mn) = O(mn)
-
-  Good implementation: use the union-find data structure
-  . Build set T of edges in the MST
-  . Maintain set for each connected component
-  . O(mlgn) for sorting and O(m &(m,n)) for union-find.
-*/
 #ifndef __KRUSKAL__HPP__
 #define __KRUSKAL__HPP__
 
@@ -32,9 +16,17 @@
 /////////////////////////////////////////
 void kruskal_hs(Graph G, MST &T, std::vector<Edge> edges)
 {
-  std::clock_t t = std::clock();
+  
   heapsortEdges(edges);
-
+  //////////////////////
+  /*  std::vector<Edge> ed = edges;
+  float time_t = 0.0f;
+  for(int j = 0 ; j < 30 ; j++)
+  {
+    edges = ed;
+    T = MST(G.V);
+  std::clock_t t = std::clock();*/
+  ////////////////
   std::vector<Tree_node<int>*> components(G.V);
   for(int i = 0 ; i < G.V ; i++)
   {
@@ -42,29 +34,40 @@ void kruskal_hs(Graph G, MST &T, std::vector<Edge> edges)
     components[i]->Make_Set(i);
   }
 
+
   int m = edges.size();
   for(int i = 0 ; i < m ; i++)
   {
+    /*for(int j = 0 ; j < G.V ;j++)
+    {
+      int a = components[j]->m_head == NULL ? -1 : components[j]->m_head->m_value;
+      std::cout << a << " ";
+    }
+    std::cout << std::endl;*/
+
     int u = edges[i].v1;
     int v = edges[i].v2;
 
-    Tree_node<int>* t1 = components[u]->Find_Set_Reference(); 
-    Tree_node<int>* t2 = components[v]->Find_Set_Reference();
+    Tree_node<int>* t1 = components[u]->Find_Set(); 
+    Tree_node<int>* t2 = components[v]->Find_Set();
     if(t1->m_value != t2->m_value)
     {
       T.add_edge(edges[i].v1,edges[i].v2,edges[i].weight);
-      components[u]->Union_Sets(t1, t2);
+      components[u]->Union(t1, t2);
     }
 
   }
-  t = std::clock() - t;
-  printf("Time seconds (Pointers): %f\n", ((float)t)/CLOCKS_PER_SEC);
-
   int csize = (int)components.size();
   for(int i = 0 ; i < csize ; i++)
   {
     delete components[i];
   }
+  ////////////////////////////
+  /*t = std::clock() - t;
+  time_t +=  ((float)t)/CLOCKS_PER_SEC;
+  }
+  printf("Time seconds (Pointers): %f\n", time_t);*/
+  ////////////////////////////
 }
  
 void kruskal_cs(Graph G, MST &T, std::vector<Edge> edges)
@@ -74,9 +77,18 @@ void kruskal_cs(Graph G, MST &T, std::vector<Edge> edges)
   {
     w_max = std::max(w_max, edges[i].weight);
   }
-  std::clock_t t = std::clock();
   std::vector<Edge> edges_sorted;
   CountingSortEdges(edges, edges_sorted, w_max);
+
+  /////////////////////
+  /*std::vector<Edge> ed = edges_sorted;
+  float time_t = 0.0f;
+  for(int j = 0 ; j < 30 ; j++)
+  {
+    edges_sorted = ed;
+    T = MST(G.V);
+  std::clock_t t = std::clock();*/
+  /////////////////////
 
   std::vector<Tree_node<int>*> components(G.V);
   for(int i = 0 ; i < G.V ; i++)
@@ -92,31 +104,43 @@ void kruskal_cs(Graph G, MST &T, std::vector<Edge> edges)
     int v = edges_sorted[i].v2;
 
     //se estiverem em componentes diferentes...
-    Tree_node<int>* t1 = components[u]->Find_Set_Reference(); 
-    Tree_node<int>* t2 = components[v]->Find_Set_Reference();
+    Tree_node<int>* t1 = components[u]->Find_Set(); 
+    Tree_node<int>* t2 = components[v]->Find_Set();
     if(t1->m_value != t2->m_value)
     {
       T.add_edge(edges_sorted[i].v1,edges_sorted[i].v2,edges_sorted[i].weight);
-      components[u]->Union_Sets(t1, t2);
+      components[u]->Union(t1, t2);
     }
   }
-  t = std::clock() - t;
-  printf("Time seconds (Pointers): %f\n", ((float)t)/CLOCKS_PER_SEC);
-
+  
   int csize = (int)components.size();
   for(int i = 0 ; i < csize ; i++)
   {
     delete components[i];
   }
+  ////////////////////////////
+  /*t = std::clock() - t;
+  time_t +=  ((float)t)/CLOCKS_PER_SEC;
+  }
+  printf("Time seconds (Pointers): %f\n", time_t);*/
+  ////////////////////////////
 }
 ///////////////////////////////////////
 // Utilizando Union Find com Vetores //
 ///////////////////////////////////////
 void kruskal_hs_vec(Graph G, MST &T, std::vector<Edge> edges)
 {
-  std::clock_t t = std::clock();
   heapsortEdges(edges);
-
+  
+  /////////////////////
+  /*std::vector<Edge> ed = edges;
+  float time_t = 0.0f;
+  for(int j = 0 ; j < 30 ; j++)
+  {
+    edges = ed;
+    T = MST(G.V);
+  std::clock_t t = std::clock();*/
+  /////////////////////
   Union_Find unf(G.V);
   
   int m = edges.size();
@@ -125,17 +149,21 @@ void kruskal_hs_vec(Graph G, MST &T, std::vector<Edge> edges)
     int u = edges[i].v1;
     int v = edges[i].v2;
 
-    int t1 = unf.find_set(u); 
-    int t2 = unf.find_set(v); 
+    int t1 = unf.Find_Set(u); 
+    int t2 = unf.Find_Set(v); 
     if(t1 != t2)
     {
       T.add_edge(edges[i].v1,edges[i].v2,edges[i].weight);
-      unf.union_sets(t1, t2);
+      unf.Union(t1, t2);
     }
 
   }
-  t = std::clock() - t;
-  printf("Time seconds (Vectors): %f\n", ((float)t)/CLOCKS_PER_SEC);
+  /////////////////////////
+  /*t = std::clock() - t;
+  time_t +=  ((float)t)/CLOCKS_PER_SEC;
+  }
+  printf("Time seconds (Vectors): %f\n", time_t);*/
+  /////////////////////////
 }
  
 void kruskal_cs_vec(Graph G, MST &T, std::vector<Edge> edges_in)
@@ -145,10 +173,18 @@ void kruskal_cs_vec(Graph G, MST &T, std::vector<Edge> edges_in)
   {
     w_max = std::max(w_max, edges_in[i].weight);
   }
-  std::clock_t t = std::clock();
   std::vector<Edge> edges;
   CountingSortEdges(edges_in, edges, w_max);
 
+  /////////////////////
+  /*std::vector<Edge> ed = edges;
+  float time_t = 0.0f;
+  for(int j = 0 ; j < 30 ; j++)
+  {
+    edges = ed;
+    T = MST(G.V);
+  std::clock_t t = std::clock();*/
+  /////////////////////
   Union_Find unf(G.V);
   
   int m = edges.size();
@@ -157,16 +193,20 @@ void kruskal_cs_vec(Graph G, MST &T, std::vector<Edge> edges_in)
     int u = edges[i].v1;
     int v = edges[i].v2;
 
-    int t1 = unf.find_set(u); 
-    int t2 = unf.find_set(v); 
+    int t1 = unf.Find_Set(u); 
+    int t2 = unf.Find_Set(v); 
     if(t1 != t2)
     {
       T.add_edge(edges[i].v1,edges[i].v2,edges[i].weight);
-      unf.union_sets(t1, t2);
+      unf.Union(t1, t2);
     }
   }
-  t = std::clock() - t;
-  printf("Time seconds (Vectors): %f\n", ((float)t)/CLOCKS_PER_SEC);
+  /////////////////////////
+  /*t = std::clock() - t;
+  time_t +=  ((float)t)/CLOCKS_PER_SEC;
+  }
+  printf("Time seconds (Vectors): %f\n", time_t);*/
+  /////////////////////////
 }
 
 #endif
